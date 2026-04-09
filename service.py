@@ -1,57 +1,113 @@
 import json
+from db import get_connection
 from models import Pessoa
 
 class Cadastro:
-    def __init__(self):
-        self.lista: list[Pessoa] = []
-        self.file = "dados.json"
-        self.load()
 
     def add(self, pessoa: Pessoa):
-        if pessoa.idade <= 0:
-            print("idade invalida")
-            return
-        if self.find(pessoa.name):
+        conn = get_connection()
+        cur = conn.cursor()
+
+        try:
+            cur.execute(
+                "INSERT INTO pessoas (name, idade) VALUES (%s, %s)",
+                (pessoa.name, pessoa.idade)
+            )
+            conn.commit()
+            return True
+        except:
+            conn.rollback()
             return False
-        self.lista.append(pessoa)
-        self.save()
+        finally:
+            cur.close()
+            conn.close()
+from models import Pessoa
+
+class Cadastro:
+    def listar(self):
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("SELECT name, idade FROM pessoas")
+        rows = cur.fetchall()
+
+        pessoas = [Pessoa(nome, idade) for nome, idade in rows]
+
+        cur.close()
+        conn.close()
+
+        return pessoas
+
+    def add(self, pessoa: Pessoa):
+        conn = get_connection()
+        cur = conn.cursor()
+
+        try:
+            cur.execute(
+                "INSERT INTO pessoas (name, idade) VALUES (%s, %s)",
+                (pessoa.name, pessoa.idade)
+            )
+            conn.commit()
+            return True
+        except:
+            conn.rollback()
+            return False
+        finally:
+            cur.close()
+            conn.close()
 
     def find(self, nome: str):
-        for p in self.lista:
-            if p.name == nome:
-                return p
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT name, idade FROM pessoas WHERE name = %s",
+            (nome,)
+        )
+
+        row = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if row:
+            return Pessoa(row[0], row[1])
+        
         return None
     
     def update(self, nome: str, nova_idade: int):
-        p = self.find(nome)
-        if p:
-            p.idade = nova_idade
-            self.save()
-            return True
-        return False
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            "UPDATE pessoas SET idade = %s WHERE name = %s",
+            (nova_idade, nome)
+        )
+
+        conn.commit()
+
+        atualizado = cur.rowcount  # quantas linhas foram afetadas
+
+        cur.close()
+        conn.close()
+
+        return atualizado > 0
 
     def remove(self, nome: str):
-        p = self.find(nome)
-        if p:
-            self.lista.remove(p)
-            self.save()
-            return True
-        return False
+        conn = get_connection()
+        cur = conn.cursor()
 
-    def save(self):
-        data = [p.to_dict() for p in self.lista]
-        with open(self.file, "w") as f:
-            json.dump(data, f, indent=4)
+        cur.execute(
+            "DELETE FROM pessoas WHERE name = %s",
+            (nome,)
+        )
 
-    def load(self):
-        try:
-            with open(self.file, "r") as f:
-                data = json.load(f)
-                self.lista = [Pessoa.from_dict(p) for p in data]
-        except FileNotFoundError:
-            self.lista= []
+        conn.commit()
 
-    def __str__(self):
-        if not self.lista:
-            return "cadastro vazio"
-        return "\n".join(str(x) for x in self.lista)
+        removido = cur.rowcount
+
+        cur.close()
+        conn.close()
+
+        return removido > 0
+

@@ -12,7 +12,7 @@ def home():
 
 @app.route("/pessoas", methods=["GET"])
 def listar():
-    return jsonify([p.to_dict() for p in cadastro.lista])
+    return jsonify([p.to_dict() for p in cadastro.listar()])
 
 @app.route("/pessoas", methods=["POST"])
 def criar():
