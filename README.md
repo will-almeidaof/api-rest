@@ -205,6 +205,6 @@ Demonstrar habilidades práticas em:
 
 ## 👨‍💻 Autor
 
-Desenvolvido por [Seu Nome]
+Desenvolvido por Will Almeida
 
 ---
