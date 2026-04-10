@@ -3,27 +3,6 @@ from db import get_connection
 from models import Pessoa
 
 class Cadastro:
-
-    def add(self, pessoa: Pessoa):
-        conn = get_connection()
-        cur = conn.cursor()
-
-        try:
-            cur.execute(
-                "INSERT INTO pessoas (name, idade) VALUES (%s, %s)",
-                (pessoa.name, pessoa.idade)
-            )
-            conn.commit()
-            return True
-        except:
-            conn.rollback()
-            return False
-        finally:
-            cur.close()
-            conn.close()
-from models import Pessoa
-
-class Cadastro:
     def listar(self):
         conn = get_connection()
         cur = conn.cursor()
