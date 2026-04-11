@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sistema</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN / REGISTER -->
+<div id="loginScreen" class="split">
+
+    <!-- LADO ESQUERDO -->
+    <div class="left">
+        <div class="overlay">
+            <h1>Seu Sistema</h1>
+            <p>Gerencie pessoas de forma simples e moderna</p>
+        </div>
+    </div>
+
+    <!-- LADO DIREITO -->
+    <div class="right">
+
+        <!-- LOGIN -->
+        <div id="loginBox">
+            <h2>Login</h2>
+
+            <input id="email" placeholder="Email">
+            <input id="senha" type="password" placeholder="Senha">
+
+            <button onclick="login()">Entrar</button>
+
+            <p>
+                Não tem conta?
+                <span onclick="mostrarRegister()">Criar conta</span>
+            </p>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="registerBox" class="hidden">
+            <h2>Criar Conta</h2>
+
+            <input id="regEmail" placeholder="Email">
+            <input id="regSenha" type="password" placeholder="Senha">
+
+            <button onclick="register()">Cadastrar</button>
+
+            <p>
+                Já tem conta?
+                <span onclick="mostrarLogin()">Voltar</span>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" class="hidden">
+
+    <header>
+        <h2>Sistema</h2>
+        <div>
+            <span id="userInfo"></span>
+            <button onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Criar Pessoa</h3>
+            <input id="nome" placeholder="Nome">
+            <input id="idade" placeholder="Idade">
+            <button onclick="criar()">Criar</button>
+        </div>
+
+        <div class="card">
+            <h3>Lista</h3>
+            <button onclick="listar()">Atualizar</button>
+            <ul id="lista"></ul>
+        </div>
+
+    </div>
+
+</div>
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
